@@ -29,6 +29,8 @@
     <properties>
         <java.version>25</java.version>
         <spring-modulith.version>2.0.2</spring-modulith.version>
+        <node.version>v25.5.0</node.version>
+        <pnpm.version>10.28.2</pnpm.version>
     </properties>
     <dependencies>
         <dependency>
@@ -111,6 +113,52 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+        <!-- ... existing code ... -->
+        <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>2.0.0</version>
+
+            <configuration>
+                <workingDirectory>src/main/frontend</workingDirectory>
+            </configuration>
+
+            <executions>
+                <execution>
+                    <id>install-node-and-pnpm</id>
+                    <goals>
+                        <goal>install-node-and-pnpm</goal>
+                    </goals>
+                    <phase>generate-resources</phase>
+                    <configuration>
+                        <nodeVersion>${node.version}</nodeVersion>
+                        <pnpmVersion>${pnpm.version}</pnpmVersion>
+                    </configuration>
+                </execution>
+
+                <execution>
+                    <id>pnpm-install</id>
+                    <goals>
+                        <goal>pnpm</goal>
+                    </goals>
+                    <phase>generate-resources</phase>
+                    <configuration>
+                        <arguments>install --frozen-lockfile</arguments>
+                    </configuration>
+                </execution>
+
+                <execution>
+                    <id>pnpm-build</id>
+                    <goals>
+                        <goal>pnpm</goal>
+                    </goals>
+                    <phase>generate-resources</phase>
+                    <configuration>
+                        <arguments>run build</arguments>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
         </plugins>
     </build>
 
